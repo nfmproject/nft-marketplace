@@ -9,6 +9,7 @@ module.exports = {
     'no-param-reassign': ['warn'],
     'no-use-before-define': 'off',
     'no-param-reassign': 'off',
+    "no-console": "off",
     //You can override any rules you want
   },
   env: {
