@@ -10,6 +10,10 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-param-reassign': 'off',
     "no-console": "off",
+    "import/prefer-default-export": "off",
+    "prefer-template": "off",
+    "react/prop-types": "off",
+    "operator-linebreak": "off"
     //You can override any rules you want
   },
   env: {

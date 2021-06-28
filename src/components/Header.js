@@ -43,11 +43,38 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#3772FF',
     marginRight: theme.spacing(2),
   },
-
 }));
 
-export default function Header() {
+export default function Header({
+  web3Modal,
+  loadWeb3Modal,
+  logoutOfWeb3Modal,
+}) {
   const classes = useStyles();
+
+  const modalButtons = [];
+
+  if (web3Modal) {
+    if (web3Modal.cachedProvider) {
+      modalButtons.push(
+        <Chip
+          className={classes.chip}
+          label="Logout"
+          onClick={logoutOfWeb3Modal}
+          variant="outlined"
+        />,
+      );
+    } else {
+      modalButtons.push(
+        <Chip
+          className={classes.chip}
+          label="Connect Wallet"
+          onClick={loadWeb3Modal}
+          variant="outlined"
+        />,
+      );
+    }
+  }
 
   const handleClick = () => {
     console.info('You clicked the Chip.');
@@ -58,7 +85,13 @@ export default function Header() {
       <AppBar position="static">
         <Toolbar>
           <div className={classes.emptyEnd} />
-          <img className={classes.logo} src={logo} alt="logo" height="25" width="25" />
+          <img
+            className={classes.logo}
+            src={logo}
+            alt="logo"
+            height="25"
+            width="25"
+          />
           <Typography edge="start" variant="h5" className={classes.title}>
             FM
           </Typography>
@@ -70,12 +103,7 @@ export default function Header() {
             label="Create"
             onClick={handleClick}
           />
-          <Chip
-            className={classes.chip}
-            label="Connect Wallet"
-            onClick={handleClick}
-            variant="outlined"
-          />
+          {modalButtons}
           <div className={classes.emptyEnd} />
         </Toolbar>
       </AppBar>
