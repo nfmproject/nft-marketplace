@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import logo from '../assets/logo_green.png';
+import { Address } from '.';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   emptyEnd: {
     flexGrow: 0.5,
   },
+  space: {
+    marginRight: theme.spacing(2),
+  },
   vertical: {
     borderLeft: '1px solid #777E90',
     height: '30px',
@@ -46,9 +50,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header({
+  address,
   web3Modal,
   loadWeb3Modal,
   logoutOfWeb3Modal,
+  mainnetProvider,
+  blockExplorer,
 }) {
   const classes = useStyles();
 
@@ -98,6 +105,13 @@ export default function Header({
           <Button className={classes.navButtons}>Discover</Button>
           <Button className={classes.navButtons}>How it works?</Button>
           <div className={classes.empty} />
+          <Address
+            address={address}
+            ensProvider={mainnetProvider}
+            blockExplorer={blockExplorer}
+            fontSize={16}
+          />
+          <div className={classes.space} />
           <Chip
             className={classes.chipBlue}
             label="Create"

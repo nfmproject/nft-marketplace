@@ -7,9 +7,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useUserAddress } from 'eth-hooks';
-
+import { Alert } from 'antd';
 import { Header } from './components';
-import { INFURA_ID, NETWORKS } from './constants';
+import { INFURA_ID, NETWORKS, NETWORK } from './constants';
 import { useUserProvider } from './hooks';
 
 /*
@@ -49,8 +49,8 @@ if (DEBUG) console.log('📡 Connecting to Mainnet Ethereum');
 //
 // attempt to connect to our own scaffold eth rpc and if that fails fall back to infura...
 // Using StaticJsonRpcProvider as the chainId won't change see https://github.com/ethers-io/ethers.js/issues/901
-// const scaffoldEthProvider = new StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544");
-// const mainnetInfura = new StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID);
+const scaffoldEthProvider = new StaticJsonRpcProvider('https://rpc.scaffoldeth.io:48544');
+const mainnetInfura = new StaticJsonRpcProvider('https://mainnet.infura.io/v3/' + INFURA_ID);
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_I
 
 // 🏠 Your local provider is usually pointed at your local blockchain
@@ -61,17 +61,123 @@ const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER
   : localProviderUrl;
 
 if (DEBUG) console.log('🏠 Connecting to provider:', localProviderUrlFromEnv);
-const localProvider = new StaticJsonRpcProvider(localProviderUrlFromEnv);
 
 function App() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const mainnetProvider = scaffoldEthProvider && scaffoldEthProvider._network ? scaffoldEthProvider : mainnetInfura;
+  const localProvider = new StaticJsonRpcProvider(localProviderUrlFromEnv);
 
   const [injectedProvider, setInjectedProvider] = useState();
-
   // Use your injected provider from 🦊 Metamask or
   // if you don't have it then instantly generate a 🔥 burner wallet.
   const userProvider = useUserProvider(injectedProvider, localProvider);
   const address = useUserAddress(userProvider);
+
+  // You can warn the user if you would like them to be on a specific network
+  const localChainId = localProvider && localProvider._network && localProvider._network.chainId;
+  const selectedChainId = userProvider && userProvider._network && userProvider._network.chainId;
+
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  /*
+  const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
+  console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
+  */
+
+  //
+  // 🧫 DEBUG 👨🏻‍🔬
+  //
+  useEffect(() => {
+    if (
+      DEBUG &&
+      mainnetProvider &&
+      address &&
+      selectedChainId
+    ) {
+      console.log('_____________________________________ 🏗 NFM-Project _____________________________________');
+      console.log('🌎 mainnetProvider', mainnetProvider);
+      console.log('🏠 localChainId', localChainId);
+      console.log('👩‍💼 selected address:', address);
+      console.log('🕵🏻‍♂️ selectedChainId:', selectedChainId);
+    }
+  }, [
+    mainnetProvider,
+    address,
+    selectedChainId,
+  ]);
+
+  let networkDisplay = '';
+  console.log(localChainId, selectedChainId, localChainId, selectedChainId);
+  if (localChainId && selectedChainId && localChainId !== selectedChainId) {
+    const networkSelected = NETWORK(selectedChainId);
+    const networkLocal = NETWORK(localChainId);
+    if (selectedChainId === 1337 && localChainId === 31337) {
+      console.log('I am in wrong network id');
+      networkDisplay = (
+        <div style={{
+          zIndex: 2, position: 'absolute', right: 0, top: 60, padding: 16,
+        }}
+        >
+          <Alert
+            message="⚠️ Wrong Network ID"
+            description={(
+              <div>
+                You have
+                {' '}
+                <b>chain id 1337</b>
+                {' '}
+                for localhost and you need to change it to
+                {' '}
+                <b>31337</b>
+                {' '}
+                to work with
+                HardHat.
+                <div>(MetaMask -&gt; Settings -&gt; Networks -&gt; Chain ID -&gt; 31337)</div>
+              </div>
+            )}
+            type="error"
+            closable={false}
+          />
+        </div>
+      );
+    } else {
+      console.log('I am in wrong network 1');
+
+      networkDisplay = (
+        <div style={{
+          zIndex: 2, position: 'absolute', right: 0, top: 60, padding: 16,
+        }}
+        >
+          <Alert
+            message="⚠️ Wrong Network"
+            description={(
+              <div>
+                You have
+                {' '}
+                <b>{networkSelected && networkSelected.name}</b>
+                {' '}
+                selected and you need to be on
+                {' '}
+                <b>{networkLocal && networkLocal.name}</b>
+                .
+              </div>
+            )}
+            type="error"
+            closable={false}
+          />
+        </div>
+      );
+    }
+  } else {
+    console.log('I am in wrong network 2');
+    networkDisplay = (
+      <div style={{
+        zIndex: -1, position: 'absolute', right: 430, top: 28, padding: 16, color: targetNetwork.color,
+      }}
+      >
+        {targetNetwork.name}
+      </div>
+    );
+  }
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -120,10 +226,31 @@ function App() {
           web3Modal={web3Modal}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
+          mainnetProvider={mainnetProvider}
         />
+        {networkDisplay}
+        <div>Hello</div>
       </div>
     </ThemeProvider>
   );
 }
+
+/* eslint-disable */
+window.ethereum &&
+  window.ethereum.on("chainChanged", chainId => {
+    web3Modal.cachedProvider &&
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
+  });
+
+window.ethereum &&
+  window.ethereum.on("accountsChanged", accounts => {
+    web3Modal.cachedProvider &&
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
+  });
+/* eslint-enable */
 
 export default App;

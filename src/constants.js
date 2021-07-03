@@ -12,6 +12,14 @@ export const BLOCKNATIVE_DAPPID = '0b58206a-f3c0-4701-a62f-73c7243e8c77';
 
 export const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 
+export const NETWORK = (chainId) => {
+  for (const n in NETWORKS) {
+    if (NETWORKS[n].chainId === chainId) {
+      return NETWORKS[n];
+    }
+  }
+};
+
 export const NETWORKS = {
   localhost: {
     name: 'localhost',

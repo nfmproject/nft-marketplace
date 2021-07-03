@@ -13,7 +13,14 @@ module.exports = {
     "import/prefer-default-export": "off",
     "prefer-template": "off",
     "react/prop-types": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "max-len": "off",
+    "destructuring-assignment": "off",
+    "react/destructuring-assignment": "off",
+    "no-underscore-dangle": "off",
+    "import/no-cycle": "off",
+    "no-restricted-syntax": "off",
+    "consistent-return": "off"
     //You can override any rules you want
   },
   env: {
