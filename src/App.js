@@ -18,7 +18,7 @@ import Chip from '@material-ui/core/Chip';
 import { KeyboardBackspaceRounded, ArrowForwardIosRounded } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 
-import { Header, MintSelection } from './components';
+import { Header, MintSelection, Discover } from './components';
 import { INFURA_ID, NETWORKS, NETWORK } from './constants';
 import { useUserProvider, useContractLoader } from './hooks';
 
@@ -462,7 +462,7 @@ function App() {
           {networkDisplay}
           <Switch>
             <Route exact path="/">
-              This is home
+              <Discover />
             </Route>
             <Route path="/mint-selection">
               <MintSelection />
