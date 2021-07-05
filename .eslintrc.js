@@ -20,7 +20,8 @@ module.exports = {
     "no-underscore-dangle": "off",
     "import/no-cycle": "off",
     "no-restricted-syntax": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "no-await-in-loop": "off",
     //You can override any rules you want
   },
   env: {

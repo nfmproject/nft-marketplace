@@ -39,14 +39,9 @@ const useUserProvider = (injectedProvider, localProvider) => useMemo(() => {
         rawPK = incomingPK;
         burnerConfig.privateKey = rawPK;
         window.history.pushState({}, '', '/');
-        const currentPrivateKey = window.localStorage.getItem(
-          'metaPrivateKey',
-        );
+        const currentPrivateKey = window.localStorage.getItem('metaPrivateKey');
         if (currentPrivateKey && currentPrivateKey !== rawPK) {
-          window.localStorage.setItem(
-            'metaPrivateKey_backup' + Date.now(),
-            currentPrivateKey,
-          );
+          window.localStorage.setItem('metaPrivateKey_backup' + Date.now(), currentPrivateKey);
         }
         window.localStorage.setItem('metaPrivateKey', rawPK);
       }
@@ -60,8 +55,7 @@ const useUserProvider = (injectedProvider, localProvider) => useMemo(() => {
   }
   // eslint-disable-next-line no-underscore-dangle
   const networkName = localProvider._network && localProvider._network.name;
-  burnerConfig.rpcUrl = `https://${networkName || 'mainnet'
-  }.infura.io/v3/${INFURA_ID}`;
+  burnerConfig.rpcUrl = `https://${networkName || 'mainnet'}.infura.io/v3/${INFURA_ID}`;
   return new Web3Provider(new BurnerProvider(burnerConfig));
 }, [injectedProvider, localProvider]);
 

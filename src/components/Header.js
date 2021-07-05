@@ -126,6 +126,7 @@ export default function Header({
           <div className={classes.vertical} />
           <Button className={classes.navButtons}>Discover</Button>
           <Button className={classes.navButtons}>How it works?</Button>
+          <Button className={classes.navButtons}>Your items</Button>
           <div className={classes.empty} />
           <Address
             address={address}
