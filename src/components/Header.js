@@ -5,7 +5,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo_green.png';
+import { Address } from '.';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +22,13 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.contrastText,
     textTransform: 'none',
     marginRight: theme.spacing(1),
+    fontSize: 16,
+  },
+  left: {
+    marginLeft: theme.spacing(2),
+  },
+  right: {
+    marginRight: theme.spacing(2),
   },
   empty: {
     flexGrow: 1,
@@ -27,28 +36,47 @@ const useStyles = makeStyles((theme) => ({
   emptyEnd: {
     flexGrow: 0.5,
   },
+  space: {
+    marginRight: theme.spacing(2),
+  },
   vertical: {
-    borderLeft: '1px solid #777E90',
-    height: '30px',
+    borderLeft: '0.5px solid #ffffff',
+    height: '35px',
     marginRight: theme.spacing(2),
   },
   chip: {
-    borderColor: theme.palette.secondary.contrastText,
+    borderColor: '#777E90',
     borderWidth: '1.5px',
+    fontSize: 15,
+    padding: 5,
+    height: 40,
+    borderRadius: 20,
   },
   logo: {
     marginRight: '1px',
   },
   chipBlue: {
-    backgroundColor: '#3772FF',
+    backgroundColor: 'rgba(55, 114, 255, 0.1)',
     marginRight: theme.spacing(2),
+    fontSize: 16,
+    padding: 5,
+    height: 40,
+    borderRadius: 20,
+    color: 'rgb(55, 114, 255)',
+  },
+  appBar: {
+    height: '80px',
+    borderBottom: '0.4px solid #353945',
   },
 }));
 
 export default function Header({
+  address,
   web3Modal,
   loadWeb3Modal,
   logoutOfWeb3Modal,
+  mainnetProvider,
+  blockExplorer,
 }) {
   const classes = useStyles();
 
@@ -83,28 +111,38 @@ export default function Header({
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
-          <div className={classes.emptyEnd} />
+        <Toolbar className={classes.appBar}>
+          <div className={classes.left} />
           <img
             className={classes.logo}
             src={logo}
             alt="logo"
-            height="25"
-            width="25"
+            height="30"
+            width="30"
           />
           <Typography edge="start" variant="h5" className={classes.title}>
             FM
           </Typography>
+          <div className={classes.vertical} />
           <Button className={classes.navButtons}>Discover</Button>
           <Button className={classes.navButtons}>How it works?</Button>
           <div className={classes.empty} />
-          <Chip
-            className={classes.chipBlue}
-            label="Create"
-            onClick={handleClick}
+          <Address
+            address={address}
+            ensProvider={mainnetProvider}
+            blockExplorer={blockExplorer}
+            fontSize={16}
           />
+          <div className={classes.space} />
+          <Link to="/mint-selection" style={{ textDecoration: 'none' }}>
+            <Chip
+              className={classes.chipBlue}
+              label="Create"
+              onClick={handleClick}
+            />
+          </Link>
           {modalButtons}
-          <div className={classes.emptyEnd} />
+          <div className={classes.right} />
         </Toolbar>
       </AppBar>
     </div>
